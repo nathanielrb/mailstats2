@@ -42,10 +42,10 @@
                      (assoc rec email id)))
        id)))
 
-(defn app [token]
+(defn theapp [config token]
   (let [s
         (stats/run
-          (gmail/messages token)
+           (gmail/messages token)
           (stats/rules get-uid))
         r (rdf/put-all-triples config s get-uid)]
     
@@ -54,7 +54,7 @@
 (defroutes app-routes
   (GET "/" [] (login-page))
   (GET "/auth" [code] (auth-page config code))
-  (GET "/app" [token] (app config token)
+  (GET "/app" [token] (theapp config token))
 
   (route/not-found "Not Found"))
 

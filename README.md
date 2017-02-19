@@ -4,13 +4,13 @@ Super-simple, not-very-safe mini app to get some basic statistics from a Gmail m
 
 ## Prerequisites
 
-You will need [Leiningen][] 2.0.0 or above installed.
+You will need Clojure 1.8.0 and [Leiningen][] 2.0.0 or above installed.
 
 [leiningen]: https://github.com/technomancy/leiningen
 
 ## Running
 
-To run, start a web server:
+To run, start a web server in the project root directory:
 
     lein ring server
 
@@ -22,6 +22,8 @@ Users are assumed to be uniquely identified by email address.
 
 Email bodies are not sent to the RDF store, as I've been testing with my private email.
 
-RDF data is added to the `http://5.9.241.51:8890/sparql` endpoint in the named graph `<http://tenforce.example.com/nathaniel>`
+RDF data is inserted into the the named graph `<http://tenforce.example.com/nathaniel>` at  `http://5.9.241.51:8890/sparql`.
 
 There's very little error handling, so a lot can go wrong.
+
+Yes, I do realize the approach is a bit overkill.

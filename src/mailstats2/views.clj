@@ -31,8 +31,7 @@
        (include-css "/css/style.css")]
       [:body
        [:h1 ~header]
-       ~body
-       ])
+       ~body ])
     (catch Exception e#
       (html5
        [:h1 "Error"]
@@ -46,7 +45,7 @@
     (map #(let [sender (first %)]
             (list [:p {:class "email"
                        :title (:name (get users sender))}
-                   (h sender)
+                   (or (h sender) "[no sender]")
                    [:b (second %) " email" (pl-s (second %))]]))
          (take 5 (sort-by second > (:Senders statistics)))))
    
