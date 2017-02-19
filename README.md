@@ -16,6 +16,12 @@ To run, start a web server in the project directory:
 
 and a browser will open at [http://localhost:3000](http://localhost:3000) where you will be invited to authorize a Gmail account.
 
+## Structure
+
+Basic config and routes are defined in `src/mailstats2/handler.clj'.
+
+The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj'.
+
 ## Notes
 
 Users are assumed to be uniquely identified by email address.
@@ -24,6 +30,10 @@ Email bodies are not sent to the RDF store, as I've been testing with my private
 
 RDF data is inserted into the the named graph `<http://tenforce.example.com/nathaniel>` at  `http://5.9.241.51:8890/sparql`.
 
-There's very little error handling, so a lot can go wrong.
+There's very little in way of error handling, so a lot can go wrong.
 
-Yes, I do realize the approach is a bit overkill.
+And yes, I do realize the approach is a bit complicated.
+
+## Screenshot
+
+![screenshot](screenshot.png)

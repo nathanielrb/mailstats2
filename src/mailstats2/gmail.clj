@@ -18,18 +18,6 @@
                (str "Error accessing Google API: "
                      (.data e#))))))))
 
-(defn oauth-get [token service v type params config]
-  (google-api
-   (:body 
-    (http/post (str "https://www.googleapis.com/" service "/v" v "/" type) ;; to config
-               {:form-params (merge params
-                                    {:client_id (:client-id config)
-                                     :client_secret (:client-secret config)
-                                     :redirect_uri (:client-auth-url config)
-                                     :grant_type "authorization_code" })
-                :content-type "application/x-www-form-urlencoded"
-                :as :json}))))
-
 (defn oauth-get-token [code config]
   (google-api
     (:access_token

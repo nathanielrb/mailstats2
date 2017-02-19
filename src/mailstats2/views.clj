@@ -67,7 +67,7 @@
    
    (stats-box
     "RDF Triples" nil
-    (str "Updated " (count rdf-responses) " triples"))
+    (str "Updated triples (" (count rdf-responses) " entities)."))
    
    ])
 
