@@ -31,8 +31,8 @@
     :indexer (constantly '(totalsize))
     :value (fn [size] [size 1])
     :reducer (fn [a b]
-               (list (+ (first a) (first b))
-                     (+ (second a) (second b))))
+               [(+ (first a) (first b))
+                     (+ (second a) (second b))])
     }
 
    {

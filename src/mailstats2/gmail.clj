@@ -23,11 +23,12 @@
     (:access_token
      (:body 
       (http/post "https://www.googleapis.com/oauth2/v4/token" ;; to config
-                 {:form-params {:code code
-                                :client_id (:client-id config)
-                                :client_secret (:client-secret config)
-                                :redirect_uri (:client-auth-url config)
-                                :grant_type "authorization_code" }
+                 {:form-params
+                  {:code code
+                   :client_id (:client-id config)
+                   :client_secret (:client-secret config)
+                   :redirect_uri (:client-auth-url config)
+                   :grant_type "authorization_code" }
                   :content-type "application/x-www-form-urlencoded"
                   :as :json})))))
 
@@ -58,7 +59,7 @@
   ([token user]
    (gmail-get-messages token user nil))
   ([token user pagetoken]
-   (println (str "Gmail Users.messages.list, pagetoken: " pagetoken))
+   (println (str "Getting Gmail Users.messages.list, pagetoken: " pagetoken))
    (let [messages
          (gmail-get token user "messages" "list" nil {:maxResults 1000 :pageToken pagetoken})]
      (concat (:messages messages)
@@ -71,8 +72,7 @@
    (gmail-get token "me" "profile" "getProfile")))
 
 (defn filter-field [field-name m]
-  "field-name can be a string or a set of strings.
-   (filter-field #{\"From\" \"To\" msg) => ({ :name \"From\" :value \"bob@gmail.com\"} ...)"
+  "field-name can be a string or a set of strings: (filter-field #{\"From\" \"To\"} msg)."
   (let [fields (if (string? field-name) #{field-name} field-name)]
     (filter #(fields (:name %))
             (:headers (:payload m)))))
@@ -88,21 +88,20 @@
 
 (defn extract-fields [msg]
   {:id (:id msg)
+   
    :sizeEstimate (:sizeEstimate msg)
-   :from (map
-          split-email
-          (mapcat
-           (partial re-seq #"[^,]+")
-           (map #(or (:value %) "") (filter-field #{"From" "Sender"} msg))))
-   :to  (map
-         split-email
-         (mapcat
-          (partial re-seq #"[^,]+")
-          (map #(or (:value %) "") (filter-field "To" msg))))
-   :title (first
-           (map
-            :value
-            (filter-field "Subject" msg)))})
+   
+   :from (map split-email
+              (mapcat (partial re-seq #"[^,]+")
+                      (map #(or (:value %) "")
+                           (filter-field #{"From" "Sender"} msg))))
+
+   :to  (map split-email
+             (mapcat (partial re-seq #"[^,]+")
+                     (map #(or (:value %) "")
+                          (filter-field "To" msg))))
+
+   :title (first (map :value (filter-field "Subject" msg)))})
 
 (defn messages [token]
   (let [user (gmail-get-user token)]

@@ -6,18 +6,8 @@
         [mailstats2.gmail :as gmail]
         [mailstats2.rdf :as rdf]
         [mailstats2.stats :as stats]
-        [mailstats2.views]
+        [mailstats2.views :as views]
         ring.util.response))
-
-(def local-config
-  {
-   :client-id "343994728240-jbjvn00flugpt1agu5sl78q0e66cj5qn.apps.googleusercontent.com"
-   :client-secret "jbDDu-MbePeQ8z4vBgz5_uH1"
-   :client-auth-url "http://localhost:3000/auth"
-   :sparql-endpoint "http://localhost:5820/mydb/update"
-   :sparql-user "admin"
-   :sparql-pass "admin"
-   })
 
 (def config
   {
@@ -28,8 +18,6 @@
    :sparql-user "dba"
    :sparql-pass "dba"
    })
-
-(def temp-token "ya29.Glz3AzIdwmasBf3eOdy8eINqSTSLXUn9EOXMVKgl0vay5JU-bFYhQi7QuWijuBUn8SX51_TZgR4tKsCGKDBcs-liw3EYwMqzXUlydmdUYXnKBRQ-k-UjYep8WVbk_A")
 
 (def uid-counter (atom 0))
 
@@ -45,15 +33,15 @@
 (defn theapp [config token]
   (let [s
         (stats/run
-           (gmail/messages token)
+          (take 10 (gmail/messages token))
           (stats/rules get-uid))
         r (rdf/put-all-triples config s get-uid)]
     
-    (stats-page s r)))
+    (views/stats-page s r)))
 
 (defroutes app-routes
-  (GET "/" [] (login-page))
-  (GET "/auth" [code] (auth-page config code))
+  (GET "/" [] (views/login-page))
+  (GET "/auth" [code] (views/auth-page config code))
   (GET "/app" [token] (theapp config token))
 
   (route/not-found "Not Found"))
