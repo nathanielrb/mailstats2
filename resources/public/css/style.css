@@ -1,0 +1,46 @@
+body {
+    font-size: 11pt;
+    font-family: sans-serif;
+    padding: 2em;
+}
+.stat {
+    margin-top: 1.8em;
+    background: #fef;
+    padding: 1.5em 1.5em 1em 1.5em;
+}
+.stat h2 {
+    margin-top: 0;
+    border-bottom: 1px solid gray;
+}
+.stat h2 small {
+    margin-left: 1em;
+    font-weight: normal;
+    font-size: 12pt;
+}
+small::before {
+    content: "{";
+    font-size: 3em;
+    line-height: 1rem;
+    color: #ffff4c;
+    display: inline-block;
+    vertical-align: -40%;
+}
+small::after {
+    content: "}";
+    font-size: 3em;
+    line-height: 1rem;
+    color: #ffff4c;
+    display: inline-block;
+    vertical-align: -40%;
+}
+.stat p b {
+    margin-left: 1em;
+    font-size: 10pt;
+    padding: .5em;
+    background: #efe;
+    border: 1px solid #ddd;
+    font-weight: normal;
+}
+.stat p.email {
+    cursor: default;
+}

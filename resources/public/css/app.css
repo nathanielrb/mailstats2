@@ -1,0 +1,18 @@
+body {
+    font-size: 11pt;
+    font-family: sans-serif;
+    padding: 2em;
+}
+.stat {
+    border-top: 1px solid gray;
+    padding: 1em;
+}
+.stat h2 {
+    margin-top: 0;
+}
+.stat p b {
+    margin-left: 1em;
+    font-size: 10pt;
+    padding: .5em;
+    background: beige;
+}
