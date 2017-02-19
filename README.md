@@ -10,17 +10,17 @@ You will need Clojure 1.8.0 and [Leiningen][] 2.0.0 or above installed.
 
 ## Running
 
-To run, start a web server in the project directory:
+To run, simply use Leiningen to start a web server in the project directory:
 
     lein ring server
 
-and a browser will open at [http://localhost:3000](http://localhost:3000) where you will be invited to authorize a Gmail account.
+A browser will open at [http://localhost:3000](http://localhost:3000) where you will be invited to authorize a Gmail account.
 
 ## Structure
 
 Basic config and routes are defined in `src/mailstats2/handler.clj`.
 
-The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj`. A stats rule is defined 
+The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj`.
 
 ## Notes
 
