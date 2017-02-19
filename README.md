@@ -18,9 +18,9 @@ and a browser will open at [http://localhost:3000](http://localhost:3000) where 
 
 ## Structure
 
-Basic config and routes are defined in `src/mailstats2/handler.clj'.
+Basic config and routes are defined in `src/mailstats2/handler.clj`.
 
-The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj'.
+The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj`.
 
 ## Notes
 
