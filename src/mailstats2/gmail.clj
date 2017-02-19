@@ -1,20 +1,11 @@
-(ns mailstats2.google
-  (:require [compojure.core :refer :all]
-            [compojure.route :as route]
-            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [clj-http.client :as http]
-            [clj-turtle.core :as turtle])
-;            [clj-sparql.core :as sparql]))
-  (:use [hiccup core page]
-        ring.util.response))
-
-;; Gmail Oauth2
+(ns mailstats2.gmail
+  (:require [clj-http.client :as http]))
 
 (defn auth-url [config]
   (str "https://accounts.google.com/o/oauth2/v2/auth?"
        "scope=https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/userinfo.email"
        "&state=onetimeonly"
-       "&redirect_uri=" (:client-url config)
+       "&redirect_uri=" (:client-auth-url config)
        "&response_type=code"
        "&client_id=" (:client-id config)))
 
@@ -24,7 +15,7 @@
      (catch Exception e#
        (throw (Exception.
                (do (println e#)
-               (str "Error getting Google Oauth token: "
+               (str "Error accessing Google API: "
                      (.data e#))))))))
 
 (defn oauth-get [token service v type params config]
@@ -34,7 +25,7 @@
                {:form-params (merge params
                                     {:client_id (:client-id config)
                                      :client_secret (:client-secret config)
-                                     :redirect_uri (:client-url config)
+                                     :redirect_uri (:client-auth-url config)
                                      :grant_type "authorization_code" })
                 :content-type "application/x-www-form-urlencoded"
                 :as :json}))))
@@ -47,15 +38,12 @@
                  {:form-params {:code code
                                 :client_id (:client-id config)
                                 :client_secret (:client-secret config)
-                                :redirect_uri (:client-url config)
+                                :redirect_uri (:client-auth-url config)
                                 :grant_type "authorization_code" }
                   :content-type "application/x-www-form-urlencoded"
                   :as :json})))))
 
-;; THREAD USER!!!
-
 (defn gmail-get
-  "Only implements GETs of 'Users.messages', does not implement media uploads."
   ([token user type method] (gmail-get token user type method nil {}))
   ([token user type method id] (gmail-get token user type method id {}))
   ([token user type method id params]
@@ -90,7 +78,46 @@
               (when (:nextPageToken messages)
                 (gmail-get-messages token user (:nextPageToken messages))))))))
         
-
 (defn gmail-get-user [token]
   (:emailAddress
    (gmail-get token "me" "profile" "getProfile")))
+
+(defn filter-field [field-name m]
+  "field-name can be a string or a set of strings.
+   (filter-field #{\"From\" \"To\" msg) => ({ :name \"From\" :value \"bob@gmail.com\"} ...)"
+  (let [fields (if (string? field-name) #{field-name} field-name)]
+    (filter #(fields (:name %))
+            (:headers (:payload m)))))
+
+(defn split-email [full-email]
+  (let [match
+        (re-find
+         (re-matcher
+          #"(?:\s?\"?([^<\",]+[^\s\"])\"?\s*<(.+)>)|(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$)"
+          (or full-email "")))]
+    {:email (or (nth match 3) (nth match 2))
+     :name (nth match 1)}))
+
+(defn extract-fields [msg]
+  {:id (:id msg)
+   :sizeEstimate (:sizeEstimate msg)
+   :from (map
+          split-email
+          (mapcat
+           (partial re-seq #"[^,]+")
+           (map #(or (:value %) "") (filter-field #{"From" "Sender"} msg))))
+   :to  (map
+         split-email
+         (mapcat
+          (partial re-seq #"[^,]+")
+          (map #(or (:value %) "") (filter-field "To" msg))))
+   :title (first
+           (map
+            :value
+            (filter-field "Subject" msg)))})
+
+(defn messages [token]
+  (let [user (gmail-get-user token)]
+    (println user)
+    (pmap #(extract-fields (gmail-get-message token user %))
+           (map :id (gmail-get-messages token user)))))

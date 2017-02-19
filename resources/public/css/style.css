@@ -16,12 +16,13 @@ body {
     margin-left: 1em;
     font-weight: normal;
     font-size: 12pt;
+    color: #bab;
 }
 small::before {
     content: "{";
     font-size: 3em;
     line-height: 1rem;
-    color: #ffff4c;
+    color: #bab;
     display: inline-block;
     vertical-align: -40%;
 }
@@ -29,7 +30,7 @@ small::after {
     content: "}";
     font-size: 3em;
     line-height: 1rem;
-    color: #ffff4c;
+    color: #bab;
     display: inline-block;
     vertical-align: -40%;
 }
