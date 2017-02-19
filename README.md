@@ -30,7 +30,7 @@ Email bodies are not sent to the RDF store, as I've been testing with my private
 
 RDF data is inserted into the the named graph `<http://tenforce.example.com/nathaniel>` at  `http://5.9.241.51:8890/sparql`.
 
-There's very little in way of error handling, so a lot can go wrong.
+There's very little in way of error handling, so a lot can go wrong. Weekends are short.
 
 And everything is done in memory, so there's definitely an upper limit to mailbox size this app can handle.
 
