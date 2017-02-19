@@ -33,7 +33,7 @@
 (defn theapp [config token]
   (let [s
         (stats/run
-          (take 10 (gmail/messages token))
+           (gmail/messages token)
           (stats/rules get-uid))
         r (rdf/put-all-triples config s get-uid)]
     
