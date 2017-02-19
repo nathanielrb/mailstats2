@@ -10,7 +10,7 @@ You will need Clojure 1.8.0 and [Leiningen][] 2.0.0 or above installed.
 
 ## Running
 
-To run, start a web server in the project root directory:
+To run, start a web server in the project directory:
 
     lein ring server
 
