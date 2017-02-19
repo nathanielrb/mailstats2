@@ -20,7 +20,7 @@ and a browser will open at [http://localhost:3000](http://localhost:3000) where 
 
 Basic config and routes are defined in `src/mailstats2/handler.clj`.
 
-The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj`.
+The homemade map-reduce function and configurable stats rules are defined in `src/mailstats2/stats.clj`. A stats rule is defined 
 
 ## Notes
 
@@ -32,7 +32,7 @@ RDF data is inserted into the the named graph `<http://tenforce.example.com/nath
 
 There's very little in way of error handling, so a lot can go wrong.
 
-And yes, I do realize the approach is a bit complicated.
+And everything is done in memory, so there's definitely an upper limit to mailbox size this app can handle.
 
 ## Screenshot
 
